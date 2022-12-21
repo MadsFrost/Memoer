@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  font-size: 16px;
+  min-height: 100vh;
+}
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+
+#drawerbody {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+#folderSelect {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+#drawerbody::-webkit-scrollbar {
+  display: none;
+}
+
+#foLderSelect::-webkit-scrollbar {
+  display: none !important;
+}
+
+.App {
+  @apply text-white bg-black;
+  @apply  w-full font-open;
+}
+
+#folderGrid {
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr) );
+}

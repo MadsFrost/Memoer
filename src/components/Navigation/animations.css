@@ -1,0 +1,34 @@
+.drawerOpen {
+    transform: translateX(0);
+    transition-duration: 200ms;
+    transition: ease-in-out cubic-bezier(0.6, -0.28, 0.735, 0.045)
+}
+
+.drawerOpen::before {
+    display: flex;
+}
+
+.drawerClose {
+    transform: translateX(-100%);
+    transition-duration: 110ms;
+    transition: ease-in-out cubic-bezier(0.6, -0.28, 0.735, 0.045)
+}
+
+.drawerClose::after {
+    display: none;
+}
+
+.menuClose {
+    transform: translateX(-100%);
+    transition-duration: 150ms;
+    transition: ease-in-out cubic-bezier(0.6, -0.28, 0.735, 0.045) all;
+    opacity: 0;
+}
+
+.menuOpen {
+    transform: translateX(0);
+    transition-duration: 20ms;
+    /*transition-delay: 120ms;*/
+    opacity: 100%;
+    transition: ease-in-out cubic-bezier(0.6, -0.28, 0.735, 0.045) all;
+}
