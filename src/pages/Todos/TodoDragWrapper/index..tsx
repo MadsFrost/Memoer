@@ -93,10 +93,16 @@ const TodoDragWrapper: FC<TodoDragWrapperProps> = ({ id, children, index, moveCa
     }),
   })
 
-  const opacity = isDragging ? 0 : 1
+  const opacity = isDragging ? 0.5 : 1
   drag(drop(ref))
   return (
-    <div ref={ref} style={{ opacity }} data-handler-id={handlerId} className='p-4'>
+    <div ref={ref} style={{ opacity }} data-handler-id={handlerId} 
+     className='
+     p-4 my-2
+     !backdrop-filter !backdrop-blur-xl !shadow-xl rounded-md
+     text-black
+     '
+    >
       {children}
     </div>
   )

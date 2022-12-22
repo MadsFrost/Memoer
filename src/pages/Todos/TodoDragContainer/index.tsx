@@ -53,7 +53,7 @@ const Container: React.FC = () => {
 
     return (
       <>
-        <div className='w-full bg-black'>{todos.map((card, i) => renderCard(card, i))}</div>
+        <div className='w-full'>{todos.map((card, i) => renderCard(card, i))}</div>
       </>
     )
   }
