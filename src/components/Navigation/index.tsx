@@ -6,6 +6,7 @@ import { setMenu } from "../../interface/client/clientSlice";
 import GroupItem from "./GroupItem";
 import CreateGroupOrList from "./CreateGroupOrList";
 import { MdOutlineDeleteOutline, MdOutlineCancel, MdOutlineCheckCircle } from 'react-icons/md';
+import { RiFolderSettingsFill } from 'react-icons/ri';
 import { removeGroups } from "../../interface/client/todoSlice";
 import './animations.css';
 import Box from "./DND/Box";
@@ -15,6 +16,7 @@ import CreateFolder from "./CreateFolder";
 const Navigation = () => {
     const { isMenuOpen: isOpen, user } = useAppSelector(state => state.client);
     const [deleteView, setDeleteView] = React.useState(false);
+    const [ showFolderSettings, setShowFolderSettings ] = React.useState(false);
     const [ selectedGroups, setSelectedGroups ] = React.useState<number[]>([]);
     const { groups, todofolders, folderView } = useAppSelector(state => state.todo);
     const dispatch = useDispatch();
@@ -58,6 +60,7 @@ const Navigation = () => {
 
         return findById;
     }
+
     return (
         <>  
             {<div className={`m-3 ${isOpen ? 'menuClose' : 'menuOpen' }`}>
@@ -76,7 +79,7 @@ const Navigation = () => {
                     </div>
                     <div className='min-h-full flex flex-col justify-between overflow-scroll' id="drawerbody">
                             <div>
-                                {todofolders && <FolderGrid />}
+                                {todofolders && <FolderGrid activateSettings={showFolderSettings} />}
                                 <div className='grid min-[1600px]:grid-cols-5 min-[1300px]:grid-cols-4 min-[1100px]:grid-cols-3 min-[800px]:grid-cols-2 grid-cols-2 px-8 gap-3 py-4 overflow-x-hidden overflow-y-hidden'>
                                     {deleteView ?  
                                         groups.filter((group) => {
@@ -125,14 +128,24 @@ const Navigation = () => {
                                 )
                                 : ( 
                                     <div className='flex flex-row items-center w-full justify-between'>
-                                        <MdOutlineDeleteOutline onClick={toggleDeleteView} className={`
-                                            ${groups.length !== 0 && 'text-5xl text-white fill-white cursor-pointer hover:scale-125 transition-all'}
-                                            ${groups.length === 0 && 'text-5xl text-gray-400 opacity-50'}
-                                            `}
-                                        />
+                                        <div className='flex flex-row items-center'>
+                                            <MdOutlineDeleteOutline onClick={toggleDeleteView} className={`
+                                                ${groups.length !== 0 && 'text-4xl text-white fill-white cursor-pointer hover:scale-125 transition-all'}
+                                                ${groups.length === 0 && 'text-4xl text-gray-400 opacity-50'}
+                                                `}
+                                            />
+                                        </div>
                                         <div className='flex flex-row items-center space-x-4'>
                                             {!deleteView && <CreateGroupOrList closeNav={toggleMenu} />}
                                             <CreateFolder closeNav={toggleMenu} />
+                                            <button 
+                                                onClick={() => setShowFolderSettings(!showFolderSettings)}
+                                                disabled={folderView === undefined} className={`
+                                                    ${folderView !== undefined && 'text-white'}
+                                                    ${folderView === undefined && 'text-gray-400 opacity-50'}
+                                                    `}>
+                                                <RiFolderSettingsFill style={{ fontSize: '1.85rem'}} />
+                                            </button>
                                         </div>
                                     </div>
 

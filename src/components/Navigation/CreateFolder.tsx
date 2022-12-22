@@ -41,7 +41,7 @@ const CreateFolder: React.FC<CreateFolderProps> = ({ closeNav }) => {
                 text-white
                 hover:text-neutral-300
             '>
-                <ImFolderPlus style={{ fontSize: '2.5rem'}} />
+                <ImFolderPlus className='text-2xl' />
                 <Modal isOpen={isOpen} onClose={onClose} size={isMobile ? 'full' : 'lg'} isCentered>
                     <ModalOverlay />
                     <ModalContent className='!rounded-lg !pt-4 !bg-transparent backdrop-filter backdrop-blur-lg !text-white'>

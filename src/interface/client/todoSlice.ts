@@ -29,30 +29,25 @@ const defaultExpiringGroup: TodoGroup = {
   icon: 'star',
 }
 
+const initialTodoFolders = JSON.parse(localStorage.getItem('todofolders') || '[]')
+const initialGroups = JSON.parse(localStorage.getItem('groups') || '[]')
+
+interface UpdateStorageProps {
+  groups?: TodoGroup[];
+  folders?: TodoFolder[];
+}
+const updateStorage = ({ groups, folders }: UpdateStorageProps) => {
+  if (groups !== undefined) {
+    localStorage.setItem('groups', JSON.stringify(groups))
+  }
+
+  if (folders !== undefined) {
+    localStorage.setItem('todofolders', JSON.stringify(folders))
+  }
+}
 const initialState: TodoState = {
-  todofolders: [{
-    id: 1,
-    name: 'Test Folder'
-  }],
-  groups: [
-    {
-      id: 1,
-      name: 'Expiring',
-      todos: [],
-      completedTodos: [],
-      created: Date.now(),
-      icon: 'star',
-      belongsTo: 'Test Folder'
-    },
-    {
-      id: 2,
-      name: 'Other',
-      todos: [],
-      completedTodos: [],
-      created: Date.now(),
-      icon: 'university',
-    }
-],
+  todofolders: initialTodoFolders,
+  groups: initialGroups,
   folderView: undefined,
   currentGroup: undefined,
   importantGroup: defaultImportantGroup,
@@ -77,6 +72,7 @@ export const todoSlice = createSlice({
             name: action.payload
           }]
       }
+      updateStorage({ folders: state.todofolders })
     },
     updateFolder: (state, action: PayloadAction<{ id: number, name: string }>) => {
       const oldTodoFolder = state.todofolders.find(folder => {
@@ -102,6 +98,8 @@ export const todoSlice = createSlice({
           return group
         }
       })
+
+      updateStorage({ groups: state.groups, folders: state.todofolders});
     },
     removeFolder: (state, action: PayloadAction<number>) => {
       const removedFolder = state.todofolders.find(folder => {
@@ -122,6 +120,8 @@ export const todoSlice = createSlice({
         } 
         return group;
       })
+
+      updateStorage({ groups: state.groups, folders: state.todofolders});
     },
     addGroupToFolder: (state, action: PayloadAction<{groupId: number, folder: string}>) => {
       const { groupId, folder } = action.payload;
@@ -131,6 +131,8 @@ export const todoSlice = createSlice({
         }
         return group;
       })
+
+      updateStorage({ groups: state.groups });
     },
     removeGroupFromFolder: (state, action: PayloadAction<{ groupId: number }>) => {
       const { groupId } = action.payload;
@@ -140,9 +142,11 @@ export const todoSlice = createSlice({
         }
         return group;
       })
+      updateStorage({ groups: state.groups });
     },
     addNewGroup: (state, action: PayloadAction<Omit<TodoGroup, 'id'>>) => {
       state.groups = [...state.groups, {...action.payload, id: state.groups.length + 1 }]
+      updateStorage({ groups: [...state.groups, {...action.payload, id: state.groups.length + 1 }] });
     },
     removeGroups: (state, action: PayloadAction<number[]>) => {
         const filtered = state.groups.filter(group => {
@@ -155,6 +159,9 @@ export const todoSlice = createSlice({
         state.groups = filtered.map((group, index) => {
             return {...group, id: index + 1}
         })
+        updateStorage({ groups: state.groups });
+
+        
     },
     setCurrentGroup: (state, action: PayloadAction<number>) => {
         const findGroup = state.groups.find(group => {

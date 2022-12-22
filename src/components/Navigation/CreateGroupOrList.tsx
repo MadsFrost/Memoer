@@ -97,7 +97,7 @@ const CreateGroupOrList: React.FC<CreateGroupOrListProps> = ({ closeNav }) => {
                 text-white
                 hover:text-neutral-300
             '>
-                <MdPlaylistAdd className='mt-1 text-6xl'/>
+                <MdPlaylistAdd className='mt-1 text-4xl'/>
                 <Modal isOpen={isOpen} onClose={onClose} size={isMobile ? 'full' : 'lg'} isCentered>
                     <ModalOverlay />
                     <ModalContent id="folderSelect" className={`${!isMobile && '!mt-72'} !rounded-lg !pt-4 !bg-transparent backdrop-filter backdrop-blur-lg !text-white`}>

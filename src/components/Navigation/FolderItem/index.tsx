@@ -40,12 +40,12 @@ const Folder: React.FC<DustbinProps> = memo(function Dustbin({
     <div onClick={() => onClick(folder.name)} ref={drop} className='
     w-[100px] flex flex-col h-[100px]
     justify-center items-center
-    cursor-pointer
+    cursor-pointer backdrop-filter backdrop-blur-lg
     ' data-testid="dustbin">
-      {canDrop && !isOver && <ImFolderUpload className='text-6xl' />}
-      {isOver && <ImFolderOpen className='text-purple-300 text-6xl'/>}
+      {canDrop && !isOver && folderView !== folder.name && <ImFolderUpload className='text-6xl' />}
+      {isOver && folderView !== folder.name && <ImFolderOpen className='text-purple-300 text-6xl'/>}
       {folderView === folder.name && <ImFolderOpen className='text-purple-300 text-6xl' />}
-      {!canDrop && !isOver && folderView !== folder.name && <ImFolder className='text-6xl' />}
+      {!canDrop && !isOver && folderView !== folder.name && <ImFolder className='text-6xl text-purple-400' />}
       {folder.name}
     </div>
   )
