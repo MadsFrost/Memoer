@@ -202,6 +202,26 @@ export const todoSlice = createSlice({
       })
       updateStorage({ groups: state.groups });
     },
+    undoTodoCompleted: (state, action: PayloadAction<{ groupId: number, todoId: number }>) => {
+      const { groupId, todoId } = action.payload;
+      state.groups = state.groups.map((group) => {
+        if (group.id === groupId) {
+          return {...group, todos: group.todos.map((todo) => {
+            if (todo.id === todoId) {
+              return {...todo, completed: undefined}
+            } else {
+              return todo
+            }
+          })}
+        } else {
+          return group;
+        }
+      })
+      state.currentGroup = state.groups.find(group => {
+        return group.id === groupId
+      }) ?? undefined;
+      updateStorage({ groups: state.groups });
+    },
     setGroupTodoCompleted: (state, action: PayloadAction<{ groupId: number, todoId: number }>) => {
       const { groupId, todoId } = action.payload;
       state.groups = state.groups.map((group) => {
@@ -275,6 +295,7 @@ export const {
   addGroupTodo,
   deleteGroupTodo,
   setGroupTodoCompleted,
+  undoTodoCompleted
 } = todoSlice.actions
 
 

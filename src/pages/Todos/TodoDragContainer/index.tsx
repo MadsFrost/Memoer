@@ -5,10 +5,12 @@ import { Input, Button } from '@chakra-ui/react';
 import TodoDragWrapper from '../TodoDragWrapper/index.';
 import { useAppSelector } from '../../../hooks';
 import { Todo } from '../../../types/todos';
-import { updateGroupTodos, addGroupTodo } from '../../../interface/client/todoSlice';
+import { updateGroupTodos, addGroupTodo, undoTodoCompleted } from '../../../interface/client/todoSlice';
 import { useDispatch } from 'react-redux';
 import { ImPlus } from 'react-icons/im';
 import { BsChevronUp, BsChevronDown } from 'react-icons/bs';
+import { FaUndoAlt } from 'react-icons/fa';
+
 const Container: React.FC = () => {
 
   {
@@ -16,11 +18,14 @@ const Container: React.FC = () => {
     const currentGroup = useAppSelector(state => state.todo.currentGroup);
     const [todos, setTodos] = useState<Todo[]>(currentGroup?.todos || [])
     const [todoInput, setTodoInput] = useState<string>('')
-    const [showTodoInput, setShowTodoInput] = useState<boolean>(false);
     const [showCompleted, setShowCompleted] = useState<boolean>(false);
     const completedTodos = todos.filter((todo) => {
         return todo.completed;
     })
+
+    const nonCompletedTodos = todos.filter((todo) => {
+        return !todo.completed;
+    }).length;
 
     React.useEffect(() => {
         setTodos(currentGroup?.todos ?? [])
@@ -35,13 +40,15 @@ const Container: React.FC = () => {
     }, [todos])
     
     const addNewTodo = () => {
-        dispatch(addGroupTodo({
-            groupId: currentGroup?.id as number,
-            todo: {
-                date: Date.now(),
-                text: todoInput
-            }
-        }))
+        if (todoInput.length > 0) {
+            dispatch(addGroupTodo({
+                groupId: currentGroup?.id as number,
+                todo: {
+                    date: Date.now(),
+                    text: todoInput
+                }
+            }))
+        }
         setTodoInput('')
     }
     const moveCard = useCallback((dragIndex: number, hoverIndex: number) => {
@@ -54,6 +61,13 @@ const Container: React.FC = () => {
         }),
       )
     }, [])
+
+    const undoCompletedTodo = (todoId: number) => {
+        dispatch(undoTodoCompleted({
+            groupId: currentGroup?.id as number,
+            todoId: todoId
+        }))
+    }
 
     return (
       <div className='flex flex-col justify-between min-h-full'>
@@ -68,7 +82,7 @@ const Container: React.FC = () => {
             </Button>
         </div>
         <div className='w-full h-full'>
-            <h1 className='text-2xl py-2 font-oxygen'>Todo:</h1>
+            <h1 className='text-2xl py-2 font-oxygen'>Todos ({nonCompletedTodos}):</h1>
             {todos.map((todo, i) => { 
                 if (!todo.completed) {
                     return <TodoDragWrapper
@@ -84,14 +98,14 @@ const Container: React.FC = () => {
             })}
         </div>
         {completedTodos.length > 0 && <div className='py-8'>
-            <h1 onClick={() => setShowCompleted(!showCompleted)} className='cursor-pointer text-2xl py-2 font-oxygen flex flex-row items-center'>{showCompleted ? 'Gem færdige todos:' : 'Vis færdige todos:'}
+            <h1 onClick={() => setShowCompleted(!showCompleted)} className='cursor-pointer text-2xl py-2 font-oxygen flex flex-row items-center'>{showCompleted ? `Gem færdige todos (${completedTodos.length}): ` : `Vis færdige todos (${completedTodos.length}):`}
                 {showCompleted ? <BsChevronUp className='ml-2' /> : <BsChevronDown className='ml-2' />}
             </h1>
             {showCompleted && todos.map((todo, i) => {
                 if (todo.completed) {
                     return (
-                    <div className='rounded-md bg-gray-400 text-gray-500 font-medium text-lg py-2 px-2 my-2'>
-                        {todo.text}
+                    <div className='flex flex-row items-center cursor-pointer rounded-md bg-gray-400 text-gray-500 font-medium text-lg py-2 px-2 my-2'>
+                        <FaUndoAlt onClick={() => undoCompletedTodo(todo.id)} className='ml-2 mr-2 w-8 h-8 hover:text-purple-600'/> <span>{todo.text}</span>
                     </div>
                     )
                 }

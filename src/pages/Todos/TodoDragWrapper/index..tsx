@@ -102,11 +102,11 @@ const TodoDragWrapper: FC<TodoDragWrapperProps> = ({ groupId, id, children, inde
   drag(drop(ref))
 
   const setTodoCompleted = () => {
-    dispatch(setGroupTodoCompleted({ groupId, todoId: id }))
+    dispatch(setGroupTodoCompleted({ groupId: groupId, todoId: id }))
   }
 
   const deleteTodo = () => {
-    //dispatch(deleteGroupTodo({ groupId, todoId: id }))
+    dispatch(deleteGroupTodo({ groupId: groupId, todoId: id }))
   }
 
   return (
@@ -118,7 +118,7 @@ const TodoDragWrapper: FC<TodoDragWrapperProps> = ({ groupId, id, children, inde
      '
     >
       {children}
-      <BsFillTrashFill onClick={deleteTodo} className='text-purple-400 text-xl' />
+      <BsFillTrashFill onClick={deleteTodo} className='text-purple-400 text-xl cursor-pointer' />
     </div>
   )
 }
