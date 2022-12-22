@@ -212,6 +212,8 @@ export const todoSlice = createSlice({
             } else {
               return todo
             }
+          }).map((todo, idx) => {
+            return {...todo, id: idx + 1}
           })}
         } else {
           return group;
