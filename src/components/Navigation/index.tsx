@@ -66,7 +66,7 @@ const Navigation = () => {
             {<div className={`m-3 ${isOpen ? 'menuClose' : 'menuOpen' }`}>
                 <DrawerButton />
             </div>}
-            <div className={`${isOpen ? 'drawerOpen': 'drawerClose'} top-0 left-0 backdrop-filter fixed z-10 backdrop-blur-sm h-screen flex-col w-full`}>
+            <div className={`${isOpen ? 'drawerOpen': 'drawerClose'} top-0 left-0 backdrop-filter fixed z-10 backdrop-blur-md h-screen flex-col w-full`}>
                 <div className='h-full flex flex-col'>
                     <div className='min-h-min p-3 text-white shadow-xl flex flex-row items-center cursor-pointer' onClick={toggleMenu}>
                         <div className='drawerOpen'>

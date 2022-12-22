@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
-import { TodoGroup, TodoFolder } from '../../types/todos';
+import { TodoGroup, TodoFolder, Todo } from '../../types/todos';
 
 interface TodoState {
   todofolders: TodoFolder[];
@@ -14,7 +14,11 @@ interface TodoState {
 const defaultImportantGroup: TodoGroup = {
   id: 0,
   name: 'Important',
-  todos: [],
+  todos: [
+    { date: 0, deadline: 0, id: 0, text: 'test'},
+    { date: 0, deadline: 0, id: 1, text: 'test2'},
+    { date: 0, deadline: 0, id: 2, text: 'test3'}
+  ],
   completedTodos: [],
   created: Date.now(),
   icon: 'star',
@@ -145,8 +149,15 @@ export const todoSlice = createSlice({
       updateStorage({ groups: state.groups });
     },
     addNewGroup: (state, action: PayloadAction<Omit<TodoGroup, 'id'>>) => {
-      state.groups = [...state.groups, {...action.payload, id: state.groups.length + 1 }]
-      updateStorage({ groups: [...state.groups, {...action.payload, id: state.groups.length + 1 }] });
+      state.groups = [...state.groups, 
+        {...action.payload, todos: [
+          { date: 0, deadline: 0, id: 0, text: 'test'},
+          { date: 0, deadline: 0, id: 1, text: 'test2'},
+          { date: 0, deadline: 0, id: 2, text: 'test3'}
+        ],
+        id: state.groups.length + 1 
+      }]
+      updateStorage({ groups: state.groups });
     },
     removeGroups: (state, action: PayloadAction<number[]>) => {
         const filtered = state.groups.filter(group => {
@@ -162,6 +173,28 @@ export const todoSlice = createSlice({
         updateStorage({ groups: state.groups });
 
         
+    },
+    updateGroupTodos: (state, action: PayloadAction<{ groupId: number, todoList: Todo[] }>) => {
+      console.log('ran');
+      const newKeyTodoList = action.payload.todoList.map((todo, index) => {
+        return {...todo, id: index}
+      })
+
+      const test = state.groups.map((group) => {
+        if (group.id === action.payload.groupId) {
+          return {...group, todos: newKeyTodoList}
+        }
+        return group;
+      })
+
+      console.log(test);
+      state.groups = test;
+
+      state.currentGroup = state.groups.find(group => {
+        return group.id === action.payload.groupId
+      }) ?? undefined;
+
+      updateStorage({ groups: state.groups });
     },
     setCurrentGroup: (state, action: PayloadAction<number>) => {
         const findGroup = state.groups.find(group => {
@@ -192,7 +225,8 @@ export const {
   addNewGroup, 
   removeGroups, 
   setCurrentGroup, 
-  setLatestGroup 
+  setLatestGroup,
+  updateGroupTodos
 } = todoSlice.actions
 
 

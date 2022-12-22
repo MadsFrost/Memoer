@@ -1,5 +1,6 @@
 import { TodoIconTypes } from "../components/Navigation/TodoGridItem/TodoIcon";
 export interface Todo {
+    id: number;
     text: string;
     completed?: number;
     date: number;

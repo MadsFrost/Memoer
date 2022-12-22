@@ -18,7 +18,7 @@ const TodoLayout: React.FC<TodoLayout> = ({ children }) => {
                 <div>
                     {JSON.stringify(currentGroup)}
                 </div>
-                <div>
+                <div className='max-[600px]:px-2 px-8 py-4'>
                     {children}
                 </div>
             </div>
