@@ -18,7 +18,7 @@ const Navigation = () => {
     const [deleteView, setDeleteView] = React.useState(false);
     const [ showFolderSettings, setShowFolderSettings ] = React.useState(false);
     const [ selectedGroups, setSelectedGroups ] = React.useState<number[]>([]);
-    const { groups, todofolders, folderView } = useAppSelector(state => state.todo);
+    const { groups, todofolders, folderView, currentGroup } = useAppSelector(state => state.todo);
     const dispatch = useDispatch();
     const toggleMenu = () => {
         dispatch(setMenu(!isOpen))
@@ -63,8 +63,14 @@ const Navigation = () => {
 
     return (
         <>  
-            {<div className={`m-3 ${isOpen ? 'menuClose' : 'menuOpen' }`}>
+            {<div className={`m-3 ${isOpen ? 'menuClose' : 'menuOpen' } flex flex-row items-center`}>
                 <DrawerButton />
+                {currentGroup && 
+                    <div className='ml-2 flex flex-col'>
+                        <span className='font-semibold'>{currentGroup.name} Liste</span>
+                        {currentGroup?.belongsTo && <span className='text-sm text-gray-200'>Mappe: {currentGroup.belongsTo}</span>}
+                    </div>    
+                }
             </div>}
             <div className={`${isOpen ? 'drawerOpen': 'drawerClose'} top-0 left-0 backdrop-filter fixed z-10 backdrop-blur-md h-screen flex-col w-full`}>
                 <div className='h-full flex flex-col'>

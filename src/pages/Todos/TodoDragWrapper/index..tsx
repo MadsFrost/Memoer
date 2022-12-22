@@ -2,6 +2,9 @@ import type { Identifier, XYCoord } from 'dnd-core'
 import type { FC } from 'react'
 import React, { useRef } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
+import { BsFillTrashFill } from 'react-icons/bs';
+import { useDispatch } from 'react-redux';
+import { setGroupTodoCompleted, deleteGroupTodo } from '../../../interface/client/todoSlice';
 
 export const ItemTypes = {
     TODO: 'todo',
@@ -11,6 +14,7 @@ export interface TodoDragWrapperProps {
   id: any
   children: React.ReactNode | React.ReactNode[];
   index: number
+  groupId: number
   moveCard: (dragIndex: number, hoverIndex: number) => void
 }
 
@@ -20,8 +24,9 @@ interface DragItem {
   type: string
 }
 
-const TodoDragWrapper: FC<TodoDragWrapperProps> = ({ id, children, index, moveCard }) => {
+const TodoDragWrapper: FC<TodoDragWrapperProps> = ({ groupId, id, children, index, moveCard }) => {
   const ref = useRef<HTMLDivElement>(null)
+  const dispatch = useDispatch();
   const [{ handlerId }, drop] = useDrop<
     DragItem,
     void,
@@ -95,15 +100,25 @@ const TodoDragWrapper: FC<TodoDragWrapperProps> = ({ id, children, index, moveCa
 
   const opacity = isDragging ? 0.5 : 1
   drag(drop(ref))
+
+  const setTodoCompleted = () => {
+    dispatch(setGroupTodoCompleted({ groupId, todoId: id }))
+  }
+
+  const deleteTodo = () => {
+    //dispatch(deleteGroupTodo({ groupId, todoId: id }))
+  }
+
   return (
-    <div ref={ref} style={{ opacity }} data-handler-id={handlerId} 
+    <div ref={ref} onClick={setTodoCompleted} style={{ opacity }} data-handler-id={handlerId} 
      className='
-     p-4 my-2
-     !backdrop-filter !backdrop-blur-xl !shadow-xl rounded-md
-     text-black
+     p-2 my-2 px-4
+     bg-white bg-opacity-80 text-purple-600 font-medium !shadow-lg rounded-md
+     flex flex-row justify-between items-center
      '
     >
       {children}
+      <BsFillTrashFill onClick={deleteTodo} className='text-purple-400 text-xl' />
     </div>
   )
 }

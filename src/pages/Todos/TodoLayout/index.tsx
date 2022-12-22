@@ -14,11 +14,11 @@ const TodoLayout: React.FC<TodoLayout> = ({ children }) => {
     return (
     <>
         {currentGroup && (
-            <div className={'backdrop-filter backdrop-blur-sm'}>
-                <div>
+            <div className={'backdrop-filter backdrop-blur-sm min-h-full'}>
+                <div className='hidden min-h-fit'>
                     {JSON.stringify(currentGroup)}
                 </div>
-                <div className='max-[600px]:px-2 px-8 py-4'>
+                <div className='max-[600px]:px-2 px-8 py-4 min-h-full'>
                     {children}
                 </div>
             </div>

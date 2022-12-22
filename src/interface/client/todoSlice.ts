@@ -150,11 +150,7 @@ export const todoSlice = createSlice({
     },
     addNewGroup: (state, action: PayloadAction<Omit<TodoGroup, 'id'>>) => {
       state.groups = [...state.groups, 
-        {...action.payload, todos: [
-          { date: 0, deadline: 0, id: 0, text: 'test'},
-          { date: 0, deadline: 0, id: 1, text: 'test2'},
-          { date: 0, deadline: 0, id: 2, text: 'test3'}
-        ],
+        {...action.payload, todos: [],
         id: state.groups.length + 1 
       }]
       updateStorage({ groups: state.groups });
@@ -174,8 +170,59 @@ export const todoSlice = createSlice({
 
         
     },
+    addGroupTodo: (state, action: PayloadAction<{ groupId: number, todo: Omit<Todo, 'id'> }>) => {
+      const { groupId, todo } = action.payload;
+      state.groups = state.groups.map((group) => {
+        if (group.id === groupId) {
+          return {...group, todos: [...group.todos, { ...todo, id: group.todos.length + 1 }]}
+        } else {
+          return group;
+        }
+      }
+      )
+      state.currentGroup = state.groups.find(group => {
+        return group.id === groupId
+      })
+
+      updateStorage({ groups: state.groups });
+    },
+    deleteGroupTodo: (state, action: PayloadAction<{ groupId: number, todoId: number }>) => {
+      const { groupId, todoId } = action.payload;
+      state.groups = state.groups.map((group) => {
+        if (group.id === groupId) {
+          return {...group, todos: group.todos.filter((todo) => {
+            return todo.id !== todoId
+          }).map((todo: Todo, index) => {
+            return {...todo, id: index}
+          })
+          }
+        } else {
+          return group;
+        }
+      })
+      updateStorage({ groups: state.groups });
+    },
+    setGroupTodoCompleted: (state, action: PayloadAction<{ groupId: number, todoId: number }>) => {
+      const { groupId, todoId } = action.payload;
+      state.groups = state.groups.map((group) => {
+        if (group.id === groupId) {
+          return {...group, todos: group.todos.map((todo) => {
+            if (todo.id === todoId) {
+              return {...todo, completed: Date.now()}
+            } else {  
+              return todo
+            }
+          })}
+        } else {
+          return group;
+        }
+      })
+      state.currentGroup = state.groups.find(group => {
+        return group.id === groupId
+      }) ?? undefined;
+      updateStorage({ groups: state.groups });
+    },
     updateGroupTodos: (state, action: PayloadAction<{ groupId: number, todoList: Todo[] }>) => {
-      console.log('ran');
       const newKeyTodoList = action.payload.todoList.map((todo, index) => {
         return {...todo, id: index}
       })
@@ -186,8 +233,6 @@ export const todoSlice = createSlice({
         }
         return group;
       })
-
-      console.log(test);
       state.groups = test;
 
       state.currentGroup = state.groups.find(group => {
@@ -226,7 +271,10 @@ export const {
   removeGroups, 
   setCurrentGroup, 
   setLatestGroup,
-  updateGroupTodos
+  updateGroupTodos,
+  addGroupTodo,
+  deleteGroupTodo,
+  setGroupTodoCompleted,
 } = todoSlice.actions
 
 

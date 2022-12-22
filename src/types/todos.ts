@@ -4,7 +4,7 @@ export interface Todo {
     text: string;
     completed?: number;
     date: number;
-    deadline: number;
+    deadline?: number;
 }
 
 export interface TodoGroup {
