@@ -46,7 +46,7 @@ function App() {
 
   return (
     <div className="App min-h-screen bg-cover bg-no-repeat bg-center" style={{ backgroundImage: `linear-gradient(to bottom, rgba(0,0,0, 0.4), rgba(0,0,0, 0.5)),
-    url(''https://cdn.britannica.com/94/101794-050-A98A953E/Lighthouse-Portsmouth-NH.jpg')`
+    url('https://cdn.britannica.com/94/101794-050-A98A953E/Lighthouse-Portsmouth-NH.jpg')`
   }}>
     <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
       <ChakraProvider>
