@@ -28,7 +28,7 @@ const GroupItem: React.FC<GroupItemProps> = ({ todoGroup, toggleDeleteStatus, se
     }
     const isActive = currentGroup?.id === todoGroup.id;
     const regularClass = `
-        ${isActive && 'shadow-lg backdrop-filter backdrop-blur-sm text-purple-300 fill-purple-300 font-bold'}
+        ${isActive && 'shadow-lg backdrop-filter backdrop-blur-sm text-purple-100 fill-purple-100 font-bold'}
         flex flex-col
         items-center
         justify-center

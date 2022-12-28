@@ -23,7 +23,7 @@ const Setup = () => {
   return (
     <div className='min-h-screen w-screen flex justify-center items-center'>
         <div className='flex flex-col p-2 select-none items-center font-oxygen text-center'>
-            <h1 className='text-5xl text-neutral-900'>
+            <h1 className='text-5xl text-gray-200'>
                 Velkommen til
                 <span className='font-bold text-white pl-2'>Memoer.</span>
             </h1>

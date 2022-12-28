@@ -2,10 +2,10 @@ import type { Identifier, XYCoord } from 'dnd-core'
 import type { FC } from 'react'
 import React, { useRef } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
-import { BsFillTrashFill } from 'react-icons/bs';
+import { BsFillTrashFill, BsCircleFill } from 'react-icons/bs';
 import { useDispatch } from 'react-redux';
 import { setGroupTodoCompleted, deleteGroupTodo } from '../../../interface/client/todoSlice';
-
+import { useAppSelector } from '../../../hooks';
 export const ItemTypes = {
     TODO: 'todo',
   }
@@ -27,6 +27,12 @@ interface DragItem {
 const TodoDragWrapper: FC<TodoDragWrapperProps> = ({ groupId, id, children, index, moveCard }) => {
   const ref = useRef<HTMLDivElement>(null)
   const dispatch = useDispatch();
+  const myTodo = useAppSelector(state => state.todo.groups).find((group) => {
+    return group.id === groupId;
+  })?.todos.find((todo) => {
+    return todo.id === id;
+  })
+
   const [{ handlerId }, drop] = useDrop<
     DragItem,
     void,
@@ -109,16 +115,22 @@ const TodoDragWrapper: FC<TodoDragWrapperProps> = ({ groupId, id, children, inde
     dispatch(deleteGroupTodo({ groupId: groupId, todoId: id }))
   }
 
+  const exceededDeadline = myTodo?.deadline && myTodo.deadline < Date.now();
+
   return (
     <div ref={ref} onClick={setTodoCompleted} style={{ opacity }} data-handler-id={handlerId} 
-     className='
+     className={`
+     ${exceededDeadline && '!bg-purple-100'}
+     cursor-pointer
+     !bg-white
      p-2 my-2 px-4
-     bg-white bg-opacity-80 text-purple-600 font-medium !shadow-lg rounded-md
+     bg-opacity-50 text-purple-700 font-medium !shadow-lg rounded-md
      flex flex-row justify-between items-center
-     '
+     ${exceededDeadline && '!opacity-40' }
+     `}
     >
       {children}
-      <BsFillTrashFill onClick={deleteTodo} className='text-purple-400 text-xl cursor-pointer' />
+      <BsFillTrashFill onClick={deleteTodo} className='text-purple-600 text-2xl cursor-pointer' />
     </div>
   )
 }
